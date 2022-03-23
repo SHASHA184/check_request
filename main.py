@@ -21,7 +21,7 @@ class Enter_time(StatesGroup):
 
 
 @dp.chat_join_request_handler()
-async def check(join_request: types.ChatJoinRequest):
+async def checks(join_request: types.ChatJoinRequest):
     db = sqlite3.connect(db_path)
     sql = db.cursor()
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
