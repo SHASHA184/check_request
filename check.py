@@ -5,12 +5,15 @@ import schedule
 import time
 from config import db_path
 from loader import bot
+import pytz
 
 
-def job():
+async def job():
     db = sqlite3.connect(db_path)
     sql = db.cursor()
-    time_now = datetime.now().strftime('%H:%M')
+    tz = pytz.timezone('Europe/Kiev')
+    time_now = datetime.now(tz).strftime('%H:%M')
+    print(time_now)
     id = sql.execute("SELECT id FROM requests WHERE action = ? AND time_check LIKE ?", (1, time_now)).fetchall()
     for i in range(len(id)):
         sql.execute("UPDATE requests SET action = ? WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now))
@@ -19,7 +22,7 @@ def job():
     db.commit()
 
 
-schedule.every(1).minutes.do(job)
+schedule.every(1).minute.do(job)
 while True:
     schedule.run_pending()
     time.sleep(1)

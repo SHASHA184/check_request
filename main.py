@@ -1,6 +1,9 @@
 import logging
 import os
 from datetime import datetime, timedelta
+
+import pytz
+
 from loader import dp, bot
 import asyncio
 import sqlite3
@@ -31,7 +34,8 @@ async def checks(join_request: types.ChatJoinRequest):
         logging.info(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
         await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
     else:
-        time_now = datetime.now()
+        tz = pytz.timezone('Europe/Kiev')
+        time_now = datetime.now(tz)
         time_check = (time_now + timedelta(minutes=time))
         print(time_now, time_check)
         sql.execute("INSERT INTO requests VALUES(?, ?, ?, ?, ?, ?)", (join_request.from_user.id,
