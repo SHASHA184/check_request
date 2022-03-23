@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime, timedelta
 from loader import dp, bot
 import asyncio
@@ -34,7 +35,8 @@ async def check(join_request: types.ChatJoinRequest):
         time_check = time_now + timedelta(minutes=time)
         print(time_now, time_check)
         # sql.execute("INSERT INTO requests VALUES")
-admin_id = 654937013
+
+admin_id = os.environ['id']
 
 
 @dp.message_handler(commands='start')
@@ -46,7 +48,7 @@ async def start(message: types.Message):
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
     time = sql.execute("SELECT time FROM behaviour").fetchone()[0]
     kb = InlineKeyboardMarkup().add(InlineKeyboardButton('Изменить режим', callback_data='change'))
-    await message.answer(text=f'''риветствую🖐 \nРежим работы - {action} \nПринятие заявок через {time} минут''',
+    await message.answer(text=f'''Приветствую🖐 \nРежим работы - {action} \nПринятие заявок через {time} минут''',
                            reply_markup=kb)
 
 
