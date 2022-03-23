@@ -46,7 +46,7 @@ async def start(message: types.Message):
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
     time = sql.execute("SELECT time FROM behaviour").fetchone()[0]
     kb = InlineKeyboardMarkup().add(InlineKeyboardButton('Изменить режим', callback_data='change'))
-    await message.answer(text=f'''Приветствую🖐 \nРежим работы - {action} \nПринятие заявок через {time} минут''',
+    await message.answer(text=f'''риветствую🖐 \nРежим работы - {action} \nПринятие заявок через {time} минут''',
                            reply_markup=kb)
 
 
