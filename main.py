@@ -34,8 +34,9 @@ async def check(join_request: types.ChatJoinRequest):
         time_now = datetime.now()
         time_check = (time_now + timedelta(minutes=time))
         print(time_now, time_check)
-        sql.execute("INSERT INTO requests VALUES(?, ?, ?, ?, ?)", (join_request.chat.id,
-                    join_request.from_user.first_name, time_now.strftime('%H:%M'), time_check.strftime('%H:%M'), 1))
+        sql.execute("INSERT INTO requests VALUES(?, ?, ?, ?, ?, ?)", (join_request.from_user.id,
+                    join_request.from_user.first_name, time_now.strftime('%H:%M'), time_check.strftime('%H:%M'), 1,
+                    join_request.chat.id))
         db.commit()
 
 admin_id = os.environ['id']
