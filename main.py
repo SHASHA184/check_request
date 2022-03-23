@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 import pytz
 import schedule
-
+import aioschedule
 from loader import dp, bot
 import asyncio
 import sqlite3
@@ -113,6 +113,7 @@ async def enter_time(message: types.Message, state: FSMContext):
 
 
 async def job():
+    print(0)
     db = sqlite3.connect(db_path)
     sql = db.cursor()
     tz = pytz.timezone('Europe/Kiev')
@@ -124,10 +125,16 @@ async def job():
         channel_id = sql.execute("SELECT channel_id FROM requests WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now)).fetchone()[0]
         await bot.approve_chat_join_request(chat_id=channel_id, user_id=id[i][0])
     db.commit()
+    schedule.every(1).second.do(job)
+    while True:
+        print(0)
+        await aioschedule.run_pending()
+        time.sleep(1)
+
+
+async def on_startup(_):
+    asyncio.create_task(job())
+
 
 if __name__ == '__main__':
-    executor.start_polling(dp)
-    schedule.every(1).minute.do(job)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup)
