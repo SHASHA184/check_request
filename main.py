@@ -45,8 +45,8 @@ async def checks(join_request: types.ChatJoinRequest):
                     join_request.chat.id))
         db.commit()
 
-# admin_id = os.environ['id']
-admin_id = 654937013
+admin_id = os.environ['id']
+# admin_id = 654937013
 
 
 @dp.message_handler(commands='start')
