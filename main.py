@@ -107,7 +107,7 @@ async def enter_time(message: types.Message, state: FSMContext):
     time = message.text
     db = sqlite3.connect(db_path)
     sql = db.cursor()
-    sql.execute("UPDATE behaviour SET action = ?, time = ?", ('Принятие через время', message.text))
+    sql.execute("UPDATE behaviour SET action = ?, time = ?", ('Принятие через время', time))
     db.commit()
     kb = InlineKeyboardMarkup().add(InlineKeyboardButton(text='На главную', callback_data='start'))
     await message.answer("Изменения приняты", reply_markup=kb)
