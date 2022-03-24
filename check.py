@@ -12,23 +12,21 @@ import pytz
 
 
 async def job():
-    db = sqlite3.connect(db_path)
-    sql = db.cursor()
-    tz = pytz.timezone('Europe/Kiev')
-    time_now = datetime.now(tz).strftime('%H:%M')
-    print(time_now)
-    id = sql.execute("SELECT id FROM requests WHERE action = ? AND time_check LIKE ?", (1, time_now)).fetchall()
-    for i in range(len(id)):
-        sql.execute("UPDATE requests SET action = ? WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now))
-        channel_id = sql.execute("SELECT channel_id FROM requests WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now)).fetchone()[0]
-        await bot.approve_chat_join_request(chat_id=channel_id, user_id=id[i][0])
-    db.commit()
+    while True:
+        db = sqlite3.connect(db_path)
+        sql = db.cursor()
+        tz = pytz.timezone('Europe/Kiev')
+        time_now = datetime.now(tz).strftime('%H:%M')
+        print(time_now)
+        id = sql.execute("SELECT id FROM requests WHERE action = ? AND time_check LIKE ?", (1, time_now)).fetchall()
+        for i in range(len(id)):
+            sql.execute("UPDATE requests SET action = ? WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now))
+            channel_id = sql.execute("SELECT channel_id FROM requests WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now)).fetchone()[0]
+            await bot.approve_chat_join_request(chat_id=channel_id, user_id=id[i][0])
+        db.commit()
 
-
-while True:
-    await asyncio.create_task(job())
-    await aioschedule.run_pending()
-    await asyncio.sleep(60)
+        await aioschedule.run_pending()
+        await asyncio.sleep(60)
 
 # async def my_sleep_func():
 #     await asyncio.sleep(random.randint(0, 5))
@@ -43,9 +41,10 @@ while True:
 #         await asyncio.sleep(60)
 #
 #
-# loop = asyncio.get_event_loop()
-#
-# asyncio.ensure_future(display_date(1, loop))
-# asyncio.ensure_future(display_date(2, loop))
-#
-# loop.run_forever()
+
+
+loop = asyncio.get_event_loop()
+
+asyncio.ensure_future(job())
+
+loop.run_forever()
