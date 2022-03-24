@@ -1,11 +1,6 @@
 import logging
 import os
-import time
-from datetime import datetime, timedelta
 from check import job
-import pytz
-import schedule
-import aioschedule
 from loader import dp, bot
 import asyncio
 import sqlite3
@@ -36,17 +31,9 @@ async def checks(join_request: types.ChatJoinRequest):
         await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
     else:
         asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
-        # tz = pytz.timezone('Europe/Kiev')
-        # time_now = datetime.now(tz)
-        # time_check = (time_now + timedelta(minutes=time))
-        # print(time_now, time_check)
-        # sql.execute("INSERT INTO requests VALUES(?, ?, ?, ?, ?, ?)", (join_request.from_user.id,
-        #             join_request.from_user.first_name, time_now.strftime('%H:%M'), time_check.strftime('%H:%M'), 1,
-        #             join_request.chat.id))
-        # db.commit()
+
 
 admin_id = os.environ['id']
-# admin_id = 654937013
 
 
 @dp.message_handler(commands='start')
