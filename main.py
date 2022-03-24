@@ -2,7 +2,7 @@ import logging
 import os
 import time
 from datetime import datetime, timedelta
-
+from check import job
 import pytz
 import schedule
 import aioschedule
@@ -30,20 +30,20 @@ async def checks(join_request: types.ChatJoinRequest):
     db = sqlite3.connect(db_path)
     sql = db.cursor()
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
-    time = sql.execute("SELECT time FROM behaviour").fetchone()[0]
-    print(action)
+    # print(times)
     if action == 'В реальном времени':
         logging.info(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
         await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
     else:
-        tz = pytz.timezone('Europe/Kiev')
-        time_now = datetime.now(tz)
-        time_check = (time_now + timedelta(minutes=time))
-        print(time_now, time_check)
-        sql.execute("INSERT INTO requests VALUES(?, ?, ?, ?, ?, ?)", (join_request.from_user.id,
-                    join_request.from_user.first_name, time_now.strftime('%H:%M'), time_check.strftime('%H:%M'), 1,
-                    join_request.chat.id))
-        db.commit()
+        asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
+        # tz = pytz.timezone('Europe/Kiev')
+        # time_now = datetime.now(tz)
+        # time_check = (time_now + timedelta(minutes=time))
+        # print(time_now, time_check)
+        # sql.execute("INSERT INTO requests VALUES(?, ?, ?, ?, ?, ?)", (join_request.from_user.id,
+        #             join_request.from_user.first_name, time_now.strftime('%H:%M'), time_check.strftime('%H:%M'), 1,
+        #             join_request.chat.id))
+        # db.commit()
 
 admin_id = os.environ['id']
 # admin_id = 654937013
@@ -113,22 +113,7 @@ async def enter_time(message: types.Message, state: FSMContext):
     await message.answer("Изменения приняты", reply_markup=kb)
 
 
-async def job():
-    print(0)
-    db = sqlite3.connect(db_path)
-    sql = db.cursor()
-    tz = pytz.timezone('Europe/Kiev')
-    time_now = datetime.now(tz).strftime('%H:%M')
-    print(time_now)
-    id = sql.execute("SELECT id FROM requests WHERE action = ? AND time_check LIKE ?", (1, time_now)).fetchall()
-    for i in range(len(id)):
-        sql.execute("UPDATE requests SET action = ? WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now))
-        channel_id = sql.execute("SELECT channel_id FROM requests WHERE id = ? AND time_check LIKE ?", (0, id[i][0], time_now)).fetchone()[0]
-        await bot.approve_chat_join_request(chat_id=channel_id, user_id=id[i][0])
-    db.commit()
-    while True:
-        await aioschedule.run_pending()
-        await asyncio.sleep(1)
+
 
 
 async def on_startup(_):
