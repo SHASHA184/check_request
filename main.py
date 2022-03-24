@@ -128,7 +128,7 @@ async def job():
     db.commit()
     while True:
         await aioschedule.run_pending()
-        await asyncio.sleep(60)
+        await asyncio.sleep(1)
 
 
 async def on_startup(_):
