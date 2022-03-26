@@ -29,13 +29,13 @@ async def checks(join_request: types.ChatJoinRequest):
     # print(times)
     user_channel_status = await bot.get_chat_member(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
     user_status = re.findall(r"\w*", str(user_channel_status))
-    print(user_status)
+    print(user_status[70], user_status[60])
     try:
-        if user_channel_status[70] != 'left':
+        if user_status[70] != 'left':
             print('Уже подписан')
         # Условие для "подписанных"
         else:
-            if user_channel_status[70] != 'left':
+            if user_status[70] != 'left':
                 if action == 'В реальном времени':
                     print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
                     await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
@@ -44,7 +44,7 @@ async def checks(join_request: types.ChatJoinRequest):
             pass
             # Условие для тех, кто не подписан
     except:
-        if user_channel_status[60] != 'left':
+        if user_status[60] != 'left':
             print('Уже подписан')
 
             # Условие для "подписанных"
