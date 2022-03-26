@@ -61,10 +61,8 @@ admin_id = [os.environ['id']]
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    print(type(admin_id))
-    if message.from_user.id not in admin_id:
-        pass
-    else:
+    print(message.from_user.id)
+    if message.from_user.id in admin_id:
         db = sqlite3.connect(db_path)
         sql = db.cursor()
         action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
