@@ -62,7 +62,7 @@ admin_id = [os.environ['id']]
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     print(type(admin_id))
-    if message.from_user.id != admin_id:
+    if message.from_user.id not in admin_id:
         pass
     else:
         db = sqlite3.connect(db_path)
