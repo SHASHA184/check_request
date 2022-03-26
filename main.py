@@ -56,12 +56,12 @@ async def checks(join_request: types.ChatJoinRequest):
             # Условие для тех, кто не подписан
 
 
-admin_id = os.environ['id']
+admin_id = [os.environ['id']]
 
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    print(message.from_user.id)
+    print(message.from_user.id, admin_id)
     if message.from_user.id in admin_id:
         db = sqlite3.connect(db_path)
         sql = db.cursor()
