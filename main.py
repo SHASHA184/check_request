@@ -28,8 +28,8 @@ async def checks(join_request: types.ChatJoinRequest):
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
     # print(times)
     user_channel_status = await bot.get_chat_member(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
-    user_channel_status = re.findall(r"\w*", str(user_channel_status))
-    print(user_channel_status)
+    user_status = re.findall(r"\w*", str(user_channel_status))
+    print(user_status)
     try:
         if user_channel_status[70] != 'left':
             print('Уже подписан')
