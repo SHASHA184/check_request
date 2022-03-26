@@ -26,11 +26,34 @@ async def checks(join_request: types.ChatJoinRequest):
     sql = db.cursor()
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
     # print(times)
-    if action == 'В реальном времени':
-        logging.info(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
-        await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
-    else:
-        asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
+    user_channel_status = await bot.get_chat_member(chat_id=id_канала, user_id=message.chat.id)
+    user_channel_status = re.findall(r"\w*", str(user_channel_status))
+    try:
+        if user_channel_status[70] != 'left':
+            pass
+        # Условие для "подписанных"
+        else:
+            if user_channel_status[70] != 'left':
+                if action == 'В реальном времени':
+                    logging.info(
+                        f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
+                    await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
+                else:
+                    asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
+            pass
+            # Условие для тех, кто не подписан
+    except:
+        if user_channel_status[60] != 'left':
+            pass
+
+            # Условие для "подписанных"
+        else:
+            if action == 'В реальном времени':
+                logging.info(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
+                await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
+            else:
+                asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
+            # Условие для тех, кто не подписан
 
 
 admin_id = os.environ['id']
