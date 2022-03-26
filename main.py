@@ -56,7 +56,7 @@ async def checks(join_request: types.ChatJoinRequest):
             # Условие для тех, кто не подписан
 
 
-admin_id = [os.environ['id']]
+admin_id = [os.environ['id'].replace("'", '')]
 
 
 @dp.message_handler(commands='start')
