@@ -36,8 +36,7 @@ async def checks(join_request: types.ChatJoinRequest):
         else:
             if user_channel_status[70] != 'left':
                 if action == 'В реальном времени':
-                    logging.info(
-                        f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
+                    print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
                     await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
                 else:
                     asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
@@ -50,7 +49,7 @@ async def checks(join_request: types.ChatJoinRequest):
             # Условие для "подписанных"
         else:
             if action == 'В реальном времени':
-                logging.info(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
+                print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
                 await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
             else:
                 asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
