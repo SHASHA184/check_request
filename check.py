@@ -13,7 +13,7 @@ async def job(chat_id, user_id):
     sql = db.cursor()
     times = sql.execute("SELECT time FROM behaviour").fetchone()[0]
     await asyncio.sleep(times * 60)
-    try:
+    async def accept():
         user_channel_status = await bot.get_chat_member(chat_id=chat_id, user_id=user_id)
         user_status = re.findall(r"\w*", str(user_channel_status))
         print(user_status[70], user_status[60])
@@ -32,8 +32,10 @@ async def job(chat_id, user_id):
             else:
                 await bot.approve_chat_join_request(chat_id=chat_id, user_id=user_id)
                 # Условие для тех, кто не подписан
+    try:
+        await accept()
     except NetworkError and TimeoutError:
         await asyncio.sleep(10)
-        await bot.approve_chat_join_request(chat_id=chat_id, user_id=user_id)
+        await accept()
 
 
