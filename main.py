@@ -14,6 +14,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
+from asyncio.exceptions import TimeoutError
 
 
 class Enter_time(StatesGroup):
@@ -26,7 +27,7 @@ async def checks(join_request: types.ChatJoinRequest):
     sql = db.cursor()
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
     # print(times)
-    user_channel_status = await bot.get_chat_member(chat_id=id_канала, user_id=message.chat.id)
+    user_channel_status = await bot.get_chat_member(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
     user_channel_status = re.findall(r"\w*", str(user_channel_status))
     try:
         if user_channel_status[70] != 'left':
@@ -61,7 +62,7 @@ async def checks(join_request: types.ChatJoinRequest):
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
-    admin_id = os.environ['id']
+    admin_id = [os.environ['id']]
     ids = [int(i) for i in admin_id[0].split(", ")]
 
     print(message.from_user.id, ids)
@@ -77,8 +78,6 @@ async def start(message: types.Message):
 
 @dp.callback_query_handler(text='start')
 async def start(call: types.CallbackQuery):
-    if call.from_user.id != admin_id:
-        pass
     db = sqlite3.connect(db_path)
     sql = db.cursor()
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
