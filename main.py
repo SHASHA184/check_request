@@ -47,7 +47,7 @@ async def start(message: types.Message):
 
 @dp.callback_query_handler(text='start')
 async def start(call: types.CallbackQuery):
-    if message.from_user.id in ids:
+    if call.from_user.id in ids:
         db = sqlite3.connect(db_path)
         sql = db.cursor()
         action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
@@ -61,7 +61,7 @@ async def start(call: types.CallbackQuery):
 
 @dp.callback_query_handler(text='change')
 async def choose(call: types.CallbackQuery):
-    if message.from_user.id in ids:
+    if call.from_user.id in ids:
         kb = InlineKeyboardMarkup(row_width=1)
         bt1 = InlineKeyboardButton(text='В реальном времени', callback_data='realtime')
         bt2 = InlineKeyboardButton(text='Принятие заявок через время', callback_data='through')
@@ -71,7 +71,7 @@ async def choose(call: types.CallbackQuery):
 
 @dp.callback_query_handler(text=['realtime', 'through'])
 async def change(call: types.CallbackQuery):
-    if message.from_user.id in ids:
+    if call.from_user.id in ids:
         if call.data == 'realtime':
             db = sqlite3.connect(db_path)
             sql = db.cursor()

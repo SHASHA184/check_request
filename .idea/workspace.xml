@@ -12,6 +12,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubProjectSettings">
+    <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="main" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="finsfera0" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="tg" />
+  </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
