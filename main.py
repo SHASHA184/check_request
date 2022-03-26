@@ -6,13 +6,10 @@ import asyncio
 import sqlite3
 from config import db_path
 from aiogram import Bot, Dispatcher, types
-from aiogram.types.update import Update
 from loader import dp, bot
-from aiogram.utils.markdown import link, hlink
 from aiogram.utils import executor
 from aiogram.dispatcher import FSMContext
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove
-from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import re
 
@@ -27,35 +24,11 @@ async def checks(join_request: types.ChatJoinRequest):
     sql = db.cursor()
     action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
     # print(times)
-    user_channel_status = await bot.get_chat_member(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
-    user_status = re.findall(r"\w*", str(user_channel_status))
-    print(user_status[70], user_status[60])
-    try:
-        if user_status[70] != 'left':
-            print('Уже подписан')
-        # Условие для "подписанных"
-        else:
-            if action == 'В реальном времени':
-                print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
-                await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
-            else:
-                asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
-            # Условие для тех, кто не подписан
-    except:
-        if user_status[60] != 'left':
-            print('Уже подписан')
-
-            # Условие для "подписанных"
-        else:
-            if action == 'В реальном времени':
-                print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
-                await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
-            else:
-                asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
-            # Условие для тех, кто не подписан
-
-
-
+    if action == 'В реальном времени':
+        print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
+        await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
+    else:
+        asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
 
 
 @dp.message_handler(commands='start')
