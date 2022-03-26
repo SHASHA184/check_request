@@ -62,9 +62,7 @@ async def checks(join_request: types.ChatJoinRequest):
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
     admin_id = os.environ['id']
-    ids = []
-    for i in range(admin_id):
-        ids.append(admin_id[i])
+    ids = [int(i) for i in admin_id[0].split(", ")]
 
     print(message.from_user.id, ids)
     if message.from_user.id in ids:
