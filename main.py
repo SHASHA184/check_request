@@ -40,13 +40,14 @@ admin_id = os.environ['id']
 async def start(message: types.Message):
     if message.from_user.id != admin_id:
         pass
-    db = sqlite3.connect(db_path)
-    sql = db.cursor()
-    action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
-    time = sql.execute("SELECT time FROM behaviour").fetchone()[0]
-    kb = InlineKeyboardMarkup().add(InlineKeyboardButton('Изменить режим', callback_data='change'))
-    await message.answer(text=f'''Приветствую🖐 \nРежим работы - {action} \nПринятие заявок через {time} минут''',
-                           reply_markup=kb)
+    else:
+        db = sqlite3.connect(db_path)
+        sql = db.cursor()
+        action = sql.execute("SELECT action FROM behaviour").fetchone()[0]
+        time = sql.execute("SELECT time FROM behaviour").fetchone()[0]
+        kb = InlineKeyboardMarkup().add(InlineKeyboardButton('Изменить режим', callback_data='change'))
+        await message.answer(text=f'''Приветствую🖐 \nРежим работы - {action} \nПринятие заявок через {time} минут''',
+                             reply_markup=kb)
 
 
 @dp.callback_query_handler(text='start')
