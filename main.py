@@ -35,13 +35,11 @@ async def checks(join_request: types.ChatJoinRequest):
             print('Уже подписан')
         # Условие для "подписанных"
         else:
-            if user_status[70] != 'left':
-                if action == 'В реальном времени':
-                    print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
-                    await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
-                else:
-                    asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
-            pass
+            if action == 'В реальном времени':
+                print(f'Принимаю реквест {join_request.from_user.first_name} в канале {join_request.chat.title}')
+                await bot.approve_chat_join_request(chat_id=join_request.chat.id, user_id=join_request.from_user.id)
+            else:
+                asyncio.create_task(job(chat_id=join_request.chat.id, user_id=join_request.from_user.id))
             # Условие для тех, кто не подписан
     except:
         if user_status[60] != 'left':
