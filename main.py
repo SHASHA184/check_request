@@ -31,7 +31,7 @@ async def checks(join_request: types.ChatJoinRequest):
     user_channel_status = re.findall(r"\w*", str(user_channel_status))
     try:
         if user_channel_status[70] != 'left':
-            pass
+            print('Уже подписан')
         # Условие для "подписанных"
         else:
             if user_channel_status[70] != 'left':
@@ -45,7 +45,7 @@ async def checks(join_request: types.ChatJoinRequest):
             # Условие для тех, кто не подписан
     except:
         if user_channel_status[60] != 'left':
-            pass
+            print('Уже подписан')
 
             # Условие для "подписанных"
         else:
