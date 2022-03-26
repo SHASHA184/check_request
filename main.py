@@ -61,6 +61,7 @@ admin_id = os.environ['id']
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
+    print(admin_id)
     if message.from_user.id != admin_id:
         pass
     else:
