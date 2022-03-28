@@ -26,5 +26,3 @@ async def job(chat_id, user_id):
     except NetworkError and TimeoutError:
         await asyncio.sleep(10)
         await accept()
-
-
